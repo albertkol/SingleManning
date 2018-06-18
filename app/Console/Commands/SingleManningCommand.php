@@ -2,23 +2,25 @@
 
 namespace App\Console\Commands;
 
+use App\Helpers\SingleManning;
+use App\Rota;
 use Illuminate\Console\Command;
 
-class TestCommand extends Command
+class SingleManningCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'test:me';
+    protected $signature = 'singlemanning:calculate';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Test command';
+    protected $description = 'Calculate single manning hours command';
 
     /**
      * Create a new command instance.
@@ -37,7 +39,10 @@ class TestCommand extends Command
      */
     public function handle()
     {
-        $commenceDate = \Carbon\Carbon::now()->startOfWeek()->format('Y/m/d');
-        $this->info($commenceDate);
+        $rota = Rota::find(1);
+
+        foreach(SingleManning::calculate($rota) as $date => $info){
+            $this->info("{$date}: {$info['single_manning_hours']} single manning hours");
+        }
     }
 }
